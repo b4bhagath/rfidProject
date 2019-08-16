@@ -16,6 +16,7 @@ export default class Login extends React.Component {
     console.log('this.state', this.state);
 
     Alert.alert('Credentials', `${username} + ${password}`);
+    this.props.navigation.navigate('Home');
   }
 
   render() {
