@@ -34,6 +34,9 @@ export default class Login extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.card} elevation={3}>
+          <View style={styles.topDecImage}>
+            {/* <Text>Hello World</Text> */}
+          </View>
           {/* <View> */}
           <Image
             // eslint-disable-next-line react-native/no-inline-styles
@@ -89,8 +92,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   image: {
-    // display: 'flex',
-    // justifyContent: 'flex-start'
+    flex: 1,
+    position: 'absolute',
+    top: 0,
   },
   input: {
     width: 300,
@@ -117,12 +121,14 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     // display: 'inline-block',
     backgroundColor: '#45A6D9',
-    height: 400,
+    height: 500,
     width: 350,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    zIndex: 2,
     padding: 50,
+    overflow: 'hidden',
   },
   inputStyle: {
     borderBottomColor: 'white',
@@ -140,5 +146,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  topDecImage: {
+    bottom: 350,
+    height: 300,
+    width: 850,
+    backgroundColor: 'white',
+    borderBottomWidth: 3,
+    borderBottomColor: 'red',
+    position: 'absolute',
+    transform: [{rotate: '-17deg'}],
   },
 });

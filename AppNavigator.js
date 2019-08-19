@@ -1,6 +1,6 @@
 import {createAppContainer, createStackNavigator} from 'react-navigation';
 import Login from './src/pages/loginPage.js';
-import Home from './src/pages/homeScreen.js';
+import Home from './src/pages/processScreen.js';
 
 const AppNavigator = createStackNavigator({
   Login: {screen: Login},
