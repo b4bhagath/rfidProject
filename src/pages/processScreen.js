@@ -38,7 +38,6 @@ export default class Friends extends React.Component {
     } else if (process === 'warehouse') {
       Alert.alert(`${process}` + ' is selected');
       this.props.navigation.navigate('Warehouse');
-
     } else {
       Alert.alert('Please select a process');
     }

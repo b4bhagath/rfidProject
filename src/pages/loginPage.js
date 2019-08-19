@@ -34,8 +34,11 @@ export default class Login extends React.Component {
     const {username, password} = this.state;
     console.log('this.state', this.state);
 
-    if (username) Alert.alert('Logged in Succesfully', `${username} + ${password}`);
-    else Alert.alert('Logged in Succesfully');
+    if (username) {
+      Alert.alert('Logged in Succesfully', `${username} + ${password}`);
+    } else {
+      Alert.alert('Logged in Succesfully');
+    }
     this.props.navigation.navigate('Home');
   }
 
@@ -48,7 +51,6 @@ export default class Login extends React.Component {
           </View>
           {/* <View> */}
           <Image
-            // eslint-disable-next-line react-native/no-inline-styles
             style={{width: '100%', height: 100}}
             source={require('../../assests/img/5a1d2fbc4ac6b00ff574e29a.png')}
             styles={styles.image}
