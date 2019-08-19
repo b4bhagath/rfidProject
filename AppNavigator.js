@@ -5,9 +5,9 @@ import Ecommerce from './src/pages/ecommerceScreen.js';
 import Warehouse from './src/pages/warehouseScreen.js';
 
 const AppNavigator = createStackNavigator({
+  Ecommerce: {screen: Ecommerce},
   Home: {screen: Home},
   Login: {screen: Login},
-  Ecommerce: {screen: Ecommerce},
   Warehouse: {screen: Warehouse},
 });
 
