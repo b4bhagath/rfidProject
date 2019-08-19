@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -9,9 +10,13 @@ import {
 } from 'react-native';
 
 export default class Friends extends React.Component {
-  state = {
-    language: 'java',
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      process: 'ecommerce',
+    };
+  }
 
   static navigationOptions = {
     title: 'Select the process',
@@ -23,6 +28,21 @@ export default class Friends extends React.Component {
       fontWeight: 'bold',
     },
   };
+  selectProcess() {
+    console.log('process is selected', this.state);
+    const {process} = this.state;
+
+    if (process === 'ecommerce') {
+      Alert.alert(`${process}` + ' is selected');
+      this.props.navigation.navigate('Ecommerce');
+    } else if (process === 'warehouse') {
+      Alert.alert(`${process}` + ' is selected');
+      this.props.navigation.navigate('Warehouse');
+
+    } else {
+      Alert.alert('Please select a process');
+    }
+  }
   render() {
     return (
       <View style={styles.wrapper}>
@@ -43,11 +63,10 @@ export default class Friends extends React.Component {
             </View>
             <View>
               <Picker
-                selectedValue={this.state.language}
+                selectedValue={this.state.process}
                 style={styles.c1Picker}
-                prompt={'Hello'}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({language: itemValue})
+                  this.setState({process: itemValue})
                 }>
                 <Picker.Item label="Warehouse" value="warehouse" />
                 <Picker.Item label="Ecommerce" value="ecommerce" />
@@ -56,36 +75,15 @@ export default class Friends extends React.Component {
           </View>
         </View>
         <View style={styles.c2}>
-          <TouchableHighlight elevation={2}>
+          <TouchableHighlight
+            onPress={this.selectProcess.bind(this)}
+            elevation={2}>
             <View style={styles.c2SaveButton}>
               <Text style={styles.c2SaveButtonText}>Save</Text>
             </View>
           </TouchableHighlight>
         </View>
       </View>
-
-      // <View style={styles.container}>
-      //   <View style={styles.s1}>
-      //     <View style={styles.s1Block}>
-      //       <Picker
-      //         selectedValue={this.state.language}
-      //         style={styles.s1Picker}
-      //         onValueChange={(itemValue, itemIndex) =>
-      //           this.setState({language: itemValue})
-      //         }>
-      //         <Picker.Item label="Warehouse" value="warehouse" />
-      //         <Picker.Item label="Ecommerce" value="ecommerce" />
-      //       </Picker>
-      //     </View>
-      //   </View>
-      //   <View style={styles.s2}>
-      //     <TouchableHighlight elevation={2}>
-      //       <View style={styles.s2SaveButton}>
-      //         <Text style={styles.s2SaveButtonText}>Save</Text>
-      //       </View>
-      //     </TouchableHighlight>
-      //   </View>
-      // </View>
     );
   }
 }
