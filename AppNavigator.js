@@ -3,8 +3,8 @@ import Login from './src/pages/loginPage.js';
 import Home from './src/pages/processScreen.js';
 
 const AppNavigator = createStackNavigator({
-  Login: {screen: Login},
   Home: {screen: Home},
+  Login: {screen: Login},
 });
 
 // const AppNavigator = createStackNavigator(...);

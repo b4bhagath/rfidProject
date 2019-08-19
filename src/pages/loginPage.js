@@ -1,6 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Alert, TextInput, View, StyleSheet, Image, Text} from 'react-native';
+import {
+  Alert,
+  TextInput,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableHighlight,
+} from 'react-native';
 
 export default class Login extends React.Component {
   static navigationOptions = {
@@ -26,7 +34,8 @@ export default class Login extends React.Component {
     const {username, password} = this.state;
     console.log('this.state', this.state);
 
-    Alert.alert('Credentials', `${username} + ${password}`);
+    if (username) Alert.alert('Logged in Succesfully', `${username} + ${password}`);
+    else Alert.alert('Logged in Succesfully');
     this.props.navigation.navigate('Home');
   }
 
@@ -65,9 +74,11 @@ export default class Login extends React.Component {
                 style={styles.input}
               />
             </View>
-            <View style={styles.loginButton} elevation={2}>
-              <Text style={styles.loginButtonText}>SIGN ON</Text>
-            </View>
+            <TouchableHighlight onPress={this.onLogin.bind(this)}>
+              <View style={styles.loginButton} onMagicTap elevation={2}>
+                <Text style={styles.loginButtonText}>SIGN ON</Text>
+              </View>
+            </TouchableHighlight>
           </View>
           <View style={styles.section3}>
             <View>
