@@ -81,15 +81,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
   },
-//   c2AppVersion: {
-//     backgroundColor: 'red',
-//     width: '100%',
-//   },
-//   c2AppVersionText: {
-//     // display: 'flex',
-//     justifyContent: 'flex-end',
-//     textAlign: 'right',
-//   },
+  //   c2AppVersion: {
+  //     backgroundColor: 'red',
+  //     width: '100%',
+  //   },
+  //   c2AppVersionText: {
+  //     // display: 'flex',
+  //     justifyContent: 'flex-end',
+  //     textAlign: 'right',
+  //   },
   box: {
     width: 100,
     height: 100,
