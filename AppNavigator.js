@@ -6,11 +6,11 @@ import Warehouse from './src/pages/warehouseScreen.js';
 import ConnectRFID from './src/pages/connectRfid.js';
 
 const AppNavigator = createStackNavigator({
-  Connectrfid: {screen: ConnectRFID},
-  Ecommerce: {screen: Ecommerce},
-  Home: {screen: Home},
   Login: {screen: Login},
+  Home: {screen: Home},
+  Ecommerce: {screen: Ecommerce},
   Warehouse: {screen: Warehouse},
+  Connectrfid: {screen: ConnectRFID},
 });
 
 // const AppNavigator = createStackNavigator(...);

@@ -46,16 +46,11 @@ export default class Login extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.card} elevation={3}>
-          <View style={styles.topDecImage}>
-            {/* <Text>Hello World</Text> */}
-          </View>
-          {/* <View> */}
+          <View style={styles.topDecImage} />
           <Image
-            style={{width: '100%', height: 100}}
+            style={{width: '100%', height: 100, position: 'absolute', top: 20}}
             source={require('../../assests/img/5a1d2fbc4ac6b00ff574e29a.png')}
-            styles={styles.image}
           />
-          {/* </View> */}
           <View>
             <View style={styles.inputStyle}>
               <TextInput
@@ -104,11 +99,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#fff',
   },
-  image: {
-    flex: 1,
-    position: 'absolute',
-    top: 0,
-  },
   input: {
     width: 300,
     height: 44,
@@ -134,7 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     // display: 'inline-block',
     backgroundColor: '#45A6D9',
-    height: 500,
+    height: 470,
     width: 350,
     display: 'flex',
     alignItems: 'center',
@@ -161,7 +151,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topDecImage: {
-    bottom: 350,
+    bottom: 320,
     height: 300,
     width: 850,
     backgroundColor: 'white',
