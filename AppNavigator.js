@@ -4,8 +4,10 @@ import Home from './src/pages/processScreen.js';
 import Ecommerce from './src/pages/ecommerceScreen.js';
 import Warehouse from './src/pages/warehouseScreen.js';
 import ConnectRFID from './src/pages/connectRfid.js';
+import SelectDevice from './src/pages/selectDevice.js';
 
 const AppNavigator = createStackNavigator({
+  Selectdevice: {screen: SelectDevice},
   Login: {screen: Login},
   Home: {screen: Home},
   Ecommerce: {screen: Ecommerce},
