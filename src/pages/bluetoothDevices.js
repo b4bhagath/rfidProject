@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text, SectionList} from 'react-native';
+import {StyleSheet, View, Text, Image, SectionList} from 'react-native';
+import FixedHeader from '../components/fixedHeader.js';
 
 export default class ConnectRfid extends React.Component {
   constructor(props) {
@@ -19,37 +20,38 @@ export default class ConnectRfid extends React.Component {
           //   Rssi: ['-112dBm', '-71dBm'],
           // },
         },
-        // {
-        //   title: 'Bonded Device List',
-        //   data: {
-        //     device: ['Poco Phone', 'Asus Max'],
-        //     deviceID: ['10:102:122:33', '112:102:92:1'],
-        //     class: ['123', '34565'],
-        //     bond: ['10', '10'],
-        //     Duration: ['145ms', '125ms'],
-        //     Rssi: ['-112dBm', '-71dBm'],
-        //   },
-        // },
+        {
+          title: 'Bonded Device List',
+          data: ['Poco1 Phone', 'Asus Max'],
+        },
       ],
     };
   }
 
-  static navigationOptions = {
-    title: 'Select Device',
-    headerStyle: {
-      backgroundColor: '#45A6D9',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+  static navigationOptions = ({navigation, navigationOptions}) => {
+    const {params} = navigation.state;
+
+    return {
+      headerTitle: <FixedHeader />,
+      headerLeft: null,
+    };
   };
   render() {
     return (
       <View style={styles.wrapper}>
-        <View />
         <View style={styles.c1}>
-          <Text style={styles.c1TextBox}>Bluetooth Devices</Text>
+          <View>
+            <Image
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{width: 30, height: 30}}
+              source={{
+                uri: 'https://facebook.github.io/react-native/img/tiny_logo.png',
+              }}
+            />
+          </View>
+          <View>
+            <Text style={styles.c1TextBox}>Scan for Devices</Text>
+          </View>
         </View>
         <View>
           <SectionList
@@ -59,7 +61,7 @@ export default class ConnectRfid extends React.Component {
                 <View style={styles.slDeviceList}>
                   <View style={styles.deviceListBlock}>
                     <View style={styles.device}>
-                      <Text style={styles.item}>{item}</Text>
+                      <Text>{item}</Text>
                     </View>
                     <View style={styles.deviceID}>
                       <Text>10:102:122:33</Text>
@@ -67,16 +69,16 @@ export default class ConnectRfid extends React.Component {
                   </View>
                   <View style={styles.deviceListBlock}>
                     <View style={styles.class}>
-                      <Text>123</Text>
+                      <Text style={styles.smallFontSize}>123</Text>
                     </View>
                     <View style={styles.bond}>
-                      <Text>10</Text>
+                      <Text style={styles.smallFontSize}>10</Text>
                     </View>
                     <View style={styles.duration}>
-                      <Text>145ms</Text>
+                      <Text style={styles.smallFontSize}>145ms</Text>
                     </View>
                     <View style={styles.rssi}>
-                      <Text>112dBm</Text>
+                      <Text style={styles.smallFontSize}>112dBm</Text>
                     </View>
                   </View>
                 </View>
@@ -103,15 +105,14 @@ const styles = StyleSheet.create({
 
   c1: {
     display: 'flex',
-    backgroundColor: '#45A6D9',
+    backgroundColor: 'rgba(247,247,247,1.0)',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'green',
   },
   c1TextBox: {
-    color: 'white',
-    // fontSize: 16,
+    color: '#45A6D9',
+    fontSize: 16,
     fontWeight: 'bold',
     textTransform: 'uppercase',
     textAlign: 'center',
@@ -135,11 +136,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     height: 35,
   },
-  slDeviceList: {},
+  smallFontSize: {
+    fontSize: 12,
+    color: '#C6C6C6',
+  },
+  slDeviceList: {
+    marginHorizontal: 10,
+    borderBottomColor: '#C6C6C6',
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderWidth: 1,
+  },
   deviceListBlock: {
-    paddingHorizontal: 20,
+    // marginVertical: 5,
+    paddingHorizontal: 10,
     paddingVertical: 5,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

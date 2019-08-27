@@ -11,15 +11,12 @@ import {
 } from 'react-native';
 
 export default class Login extends React.Component {
-  static navigationOptions = {
-    title: 'Login',
-    headerStyle: {
-      backgroundColor: '#45A6D9',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+  static navigationOptions = ({navigation, navigationOptions}) => {
+    const {params} = navigation.state;
+
+    return {
+      header: null,
+    };
   };
   constructor(props) {
     super(props);
@@ -39,7 +36,7 @@ export default class Login extends React.Component {
     } else {
       Alert.alert('Logged in Succesfully');
     }
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate('WarehouseAndDevice');
   }
 
   render() {
