@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 
-export default class WarehouseScreen extends React.Component {
+export default class HuSelectionScreen extends React.Component {
   constructor(props) {
     super(props);
 

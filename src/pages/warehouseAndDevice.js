@@ -15,6 +15,8 @@ export default class Friends extends React.Component {
 
     this.state = {
       warehouse: '0',
+      isWarehouseSelected: false,
+      deviceSelected: true,
     };
   }
   static navigationOptions = ({navigation, navigationOptions}) => {
@@ -27,7 +29,12 @@ export default class Friends extends React.Component {
   };
 
   selectProcess() {
-    console.log('warehouse is selected', this.state);
+    console.log('warehouse is selected');
+    console.log(this.state.isWarehouseSelected, this.state.deviceSelected);
+    if (this.state.isWarehouseSelected && this.state.deviceSelected) {
+      console.log('Next page plz');
+      this.props.navigation.navigate('HuSelectionScreen');
+    }
   }
   scanForDevice() {
     console.log('Scan for device');
@@ -52,16 +59,17 @@ export default class Friends extends React.Component {
             </View>
             <View>
               <View style={{height: 40, paddingTop: 10}}>
-                <Text style={{color: 'white',}}>Select Warehouse</Text>
+                <Text style={{color: 'white'}}>Select Warehouse</Text>
               </View>
               <View style={{height: 40}}>
                 <Picker
                   selectedValue={this.state.warehouse}
                   style={styles.picker}
                   mode={'dropdown'}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({warehouse: itemValue})
-                  }>
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({warehouse: itemValue});
+                    this.setState({isWarehouseSelected: true});
+                  }}>
                   <Picker.Item label=" - Select - " value="0" />
                   <Picker.Item label="Warehouse" value="warehouse" />
                   <Picker.Item label="Ecommerce" value="ecommerce" />

@@ -45,7 +45,8 @@ export default class ConnectRfid extends React.Component {
               // eslint-disable-next-line react-native/no-inline-styles
               style={{width: 30, height: 30}}
               source={{
-                uri: 'https://facebook.github.io/react-native/img/tiny_logo.png',
+                uri:
+                  'https://facebook.github.io/react-native/img/tiny_logo.png',
               }}
             />
           </View>
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   sectionHeader: {
+    marginHorizontal: 10,
     paddingVertical: 30,
     fontSize: 18,
     fontWeight: 'bold',
