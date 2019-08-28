@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import FixedHeader from '../components/fixedHeader.js';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class TotalTagList extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ export default class TotalTagList extends React.Component {
 
     this.state = {
       process: 'ecommerce',
+      playPause: 'md-play',
       tagLists: [
         {
           image: require('../../assests/img/greenTrimmer.jpg'),
@@ -67,6 +69,15 @@ export default class TotalTagList extends React.Component {
     return rows;
   }
 
+  startOrStop() {
+    console.log('Changeing icon');
+    if (this.state.playPause === 'md-play') {
+      this.setState({playPause: 'md-pause'});
+    } else {
+      this.setState({playPause: 'md-play'});
+    }
+  }
+
   render() {
     return (
       <View style={styles.wrapper}>
@@ -78,13 +89,13 @@ export default class TotalTagList extends React.Component {
         </View>
         <View style={styles.section2}>
           <View style={styles.c3}>
-            <Image
-              style={{width: 30, height: 30}}
-              source={{
-                uri:
-                  'https://facebook.github.io/react-native/img/tiny_logo.png',
-              }}
-            />
+            <TouchableOpacity
+              onPress={this.startOrStop.bind(this)}
+              elevation={2}>
+              <View style={styles.c3SaveButton}>
+                <Icon name={this.state.playPause} color="#fff" size={25} />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -136,5 +147,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  c3SaveButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#45A6D9',
+    borderRadius: 5,
+    // display: 'flex',
   },
 });

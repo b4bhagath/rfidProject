@@ -3,8 +3,8 @@ import Login from './src/pages/loginPage.js';
 import WarehouseAndDevice from './src/pages/warehouseAndDevice.js';
 import BluetoothDevice from './src/pages/bluetoothDevices.js';
 import HuSelectionScreen from './src/pages/huSelectionScreen.js';
-import totalTags from './src/pages/totalTagList.js';
-// import ConnectRFID from './src/pages/connectRfid.js';
+import TotalTags from './src/pages/totalTagList.js';
+import RfidOutput from './src/pages/rfidOutput.js';
 
 // const AppNavigator = createStackNavigator({
 // });
@@ -15,8 +15,8 @@ const RootStack = createStackNavigator(
     WarehouseAndDevice: {screen: WarehouseAndDevice},
     BluetoothDevice: {screen: BluetoothDevice},
     HuSelectionScreen: {screen: HuSelectionScreen},
-    TotalTags: {screen: totalTags},
-    // Connectrfid: {screen: ConnectRFID},
+    TotalTags: {screen: TotalTags},
+    RfidOutput: {screen: RfidOutput},
   },
   {
     initialRouteName: 'TotalTags',

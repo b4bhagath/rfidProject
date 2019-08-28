@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -25,13 +26,7 @@ export default class App extends React.Component {
         </View>
 
         <View>
-          <Image
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{width: 30, height: 30}}
-            source={{
-              uri: 'https://facebook.github.io/react-native/img/tiny_logo.png',
-            }}
-          />
+          <Icon name="md-power" color="white" size={25} />
         </View>
       </View>
     );

@@ -9,8 +9,9 @@ import {
   Image,
 } from 'react-native';
 import FixedHeader from '../components/fixedHeader.js';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class Friends extends React.Component {
+export default class Warehouse extends React.Component {
   constructor(props) {
     super(props);
 
@@ -43,12 +44,7 @@ export default class Friends extends React.Component {
   }
   render() {
     const verifiedLogo = (
-      <Image
-        style={{width: 30, height: 30}}
-        source={{
-          uri: 'https://facebook.github.io/react-native/img/tiny_logo.png',
-        }}
-      />
+      <Icon name="md-checkmark-circle" color="#32CD32" size={25} />
     );
     return (
       <View style={styles.wrapper}>
@@ -138,7 +134,7 @@ const styles = StyleSheet.create({
   blockLogo: {
     width: 200,
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     justifyContent: 'center',
     alignContent: 'center',
   },
