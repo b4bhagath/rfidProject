@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
@@ -43,7 +44,6 @@ export default class Friends extends React.Component {
   render() {
     const verifiedLogo = (
       <Image
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{width: 30, height: 30}}
         source={{
           uri: 'https://facebook.github.io/react-native/img/tiny_logo.png',

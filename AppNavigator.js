@@ -3,7 +3,7 @@ import Login from './src/pages/loginPage.js';
 import WarehouseAndDevice from './src/pages/warehouseAndDevice.js';
 import BluetoothDevice from './src/pages/bluetoothDevices.js';
 import HuSelectionScreen from './src/pages/huSelectionScreen.js';
-// import Ecommerce from './src/pages/ecommerceScreen.js';
+import totalTags from './src/pages/totalTagList.js';
 // import ConnectRFID from './src/pages/connectRfid.js';
 
 // const AppNavigator = createStackNavigator({
@@ -15,11 +15,11 @@ const RootStack = createStackNavigator(
     WarehouseAndDevice: {screen: WarehouseAndDevice},
     BluetoothDevice: {screen: BluetoothDevice},
     HuSelectionScreen: {screen: HuSelectionScreen},
-    // Ecommerce: {screen: Ecommerce},
+    TotalTags: {screen: totalTags},
     // Connectrfid: {screen: ConnectRFID},
   },
   {
-    initialRouteName: 'WarehouseAndDevice',
+    initialRouteName: 'TotalTags',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#45A6D9',
