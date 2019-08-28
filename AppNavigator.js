@@ -19,7 +19,7 @@ const RootStack = createStackNavigator(
     RfidOutput: {screen: RfidOutput},
   },
   {
-    initialRouteName: 'TotalTags',
+    initialRouteName: 'Login',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#45A6D9',
