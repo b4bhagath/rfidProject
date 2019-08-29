@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
@@ -17,8 +18,10 @@ export default class Warehouse extends React.Component {
 
     this.state = {
       warehouse: '0',
+      warehouseList: [],
       isWarehouseSelected: false,
       deviceSelected: true,
+      isDeviceSelected: false,
     };
   }
   static navigationOptions = ({navigation, navigationOptions}) => {
@@ -41,6 +44,22 @@ export default class Warehouse extends React.Component {
   scanForDevice() {
     console.log('Scan for device');
     this.props.navigation.navigate('BluetoothDevice');
+  }
+
+  componentDidMount() {
+    console.log('componentWillMount');
+    // let warehouse = [];
+    // eslint-disable-next-line consistent-this
+    let scope = this;
+    fetch('http://192.168.43.175/decathlon/public/admin/warehouse_list/qw24ad')
+      .then(response => response.json())
+      .then(responseJson => {
+        scope.setState({warehouseList: responseJson.data});
+      })
+      .catch(error => {
+        console.error(error);
+        alert('count not load warehouse api');
+      });
   }
   render() {
     const verifiedLogo = (
@@ -67,8 +86,17 @@ export default class Warehouse extends React.Component {
                     this.setState({isWarehouseSelected: true});
                   }}>
                   <Picker.Item label=" - Select - " value="0" />
-                  <Picker.Item label="Warehouse" value="warehouse" />
-                  <Picker.Item label="Ecommerce" value="ecommerce" />
+                  {/* {console.log('rendering pricker', this.state.warehouseList)} */}
+                  {this.state.warehouseList.map((value, index) => {
+                    console.log('value inside forloop', value);
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={value.WH_NAME}
+                        value={value.WH_NAME}
+                      />
+                    );
+                  })}
                 </Picker>
               </View>
             </View>
@@ -77,7 +105,7 @@ export default class Warehouse extends React.Component {
         <View style={styles.c2}>
           <View style={styles.block}>
             <View style={styles.blockLogo}>
-              {this.state.warehouse === '0' ? null : verifiedLogo}
+              {this.state.isDeviceSelected === false ? null : verifiedLogo}
             </View>
             <View>
               <View style={{height: 40, paddingTop: 10}}>

@@ -78,12 +78,29 @@ export default class TotalTagList extends React.Component {
     }
   }
 
+  confirmTotalTags() {
+    this.props.navigation.navigate('RfidOutput');
+  }
+
   render() {
     return (
       <View style={styles.wrapper}>
         <View style={styles.section1}>
           <View style={styles.c1}>
-            <Text style={styles.c1TextBox}>Total Tags Read: 10</Text>
+            <View style={styles.c1Block}>
+              <View>
+                <Text style={styles.c1TextBox}>Total Tags Read: 10</Text>
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={this.confirmTotalTags.bind(this)}
+                  elevation={2}>
+                  <View style={styles.c1ConfirmButton}>
+                    <Icon name="md-checkmark" color="#45A6D9" size={25} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
           <View style={styles.c2}>{this.getListOfTags()}</View>
         </View>
@@ -116,9 +133,21 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   c1: {
+    // flex: 1,
+    // flexDirection: 'row',
     backgroundColor: '#E9E9E9',
     paddingVertical: 10,
     height: 50,
+  },
+  c1Block: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  c1ConfirmButton: {
+    paddingHorizontal: 20,
+    // paddingVertical: 10,
+    borderRadius: 5,
   },
   c1TextBox: {
     fontSize: 20,
