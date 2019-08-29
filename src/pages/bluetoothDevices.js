@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, SectionList} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import FixedHeader from '../components/fixedHeader.js';
 
 export default class ConnectRfid extends React.Component {
@@ -41,14 +42,7 @@ export default class ConnectRfid extends React.Component {
       <View style={styles.wrapper}>
         <View style={styles.c1}>
           <View>
-            <Image
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{width: 30, height: 30}}
-              source={{
-                uri:
-                  'https://facebook.github.io/react-native/img/tiny_logo.png',
-              }}
-            />
+            <Icon name="md-refresh" color="#32CD32" size={25} />
           </View>
           <View>
             <Text style={styles.c1TextBox}>Scan for Devices</Text>
