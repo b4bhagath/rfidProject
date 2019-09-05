@@ -30,6 +30,16 @@ export default class HuSelectionScreen extends React.Component {
   startScan() {
     console.log('startScan');
     this.props.navigation.navigate('TotalTags');
+    // fetch('http://192.168.43.175/decathlon/public/admin/warehouse_list/qw24ad')
+    //   .then(response => response.json())
+    //   .then(resp => {
+    //     console.log(resp);
+    //     this.props.navigation.navigate('TotalTags');
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //     alert('count not load warehouse api');
+    //   });
   }
 
   render() {

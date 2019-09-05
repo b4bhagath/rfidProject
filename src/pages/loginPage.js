@@ -1,14 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  Alert,
-  TextInput,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableHighlight,
-} from 'react-native';
+import {Alert, View, StyleSheet, ActivityIndicator} from 'react-native';
+import {WebView} from 'react-native-webview';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends React.Component {
   static navigationOptions = ({navigation, navigationOptions}) => {
@@ -24,9 +18,69 @@ export default class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
+      urlReceived: false,
+      loginLoader: false,
     };
   }
 
+  handleWebViewNavigationStateChange = newNavState => {
+    console.log(newNavState);
+    const {url} = newNavState;
+    if (!url) {
+      return;
+    }
+
+    // console.log(this.webview);
+
+    if (url.includes('https://warehouseppm.decathlonin.net/')) {
+      this.setState({urlReceived: true});
+      this.setState({loginLoader: true});
+
+      let code = url.split('code=')[1];
+      console.log(this.state.urlReceived);
+      if (!this.state.urlReceived) {
+        this.getAccessTokenApi(code)
+          .then(resp => {
+            console.log('Authorization resp', resp);
+            this.storeData({key: '@access_token', value: resp.access_token});
+            this.setState({urlReceived: false});
+            this.props.navigation.navigate('WarehouseAndDevice');
+            this.getMyValue('@access_token');
+          })
+          .catch(error => {
+            console.error(error);
+            this.setState({urlReceived: false});
+          });
+      }
+    }
+  };
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem(data.key, data.value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  getAccessTokenApi(code) {
+    console.log('calling getAccessTokenApi', code);
+    const yourBasic =
+      'QzEwNzVjOWIzYzBkZTYwNWExYzliMGE1MjU5NWE0MWEyMjM5YTNiOTY6U1lHZGcweHRIbGV6cllzQjhUQlRiTDh3eGRZRkZlMTBFbDR0bmp0UzRtc3NuZmFiWEdYV2pyR3VOcjdQVWZ4eg==';
+    const clientID = 'C1075c9b3c0de605a1c9b0a52595a41a2239a3b96';
+    const redirectUrl = 'https://warehouseppm.decathlonin.net';
+
+    return fetch('https://preprod.idpdecathlon.oxylane.com/as/token.oauth2', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${yourBasic}`,
+        'cache-control': 'no-cache',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: 'application/json',
+      },
+      body: `grant_type=authorization_code&client_id=${clientID}&code=${code}&redirect_uri=${redirectUrl}`,
+    }).then(response => response.json());
+  }
   onLogin() {
     const {username, password} = this.state;
     console.log('this.state', this.state);
@@ -40,121 +94,31 @@ export default class Login extends React.Component {
   }
 
   render() {
+    let loaderUI = (
+      <View style={{justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+    let webviewUI = (
+      <WebView
+        style={{height: '100%', flex: 1}}
+        onNavigationStateChange={this.handleWebViewNavigationStateChange.bind(
+          this,
+        )}
+        ref={ref => (this.webview = ref)}
+        source={{
+          uri:
+            'https://preprod.idpdecathlon.oxylane.com/as/authorization.oauth2?client_id=C1075c9b3c0de605a1c9b0a52595a41a2239a3b96&response_type=code&redirect_uri=https://warehouseppm.decathlonin.net&scope=openid profile email',
+        }}
+      />
+    );
+    let loaderStyle = {flex: 1, justifyContent: 'center'};
     return (
-      <View style={styles.container}>
-        <View style={styles.card} elevation={3}>
-          <View style={styles.topDecImage} />
-          <Image
-            style={{width: '100%', height: 100, position: 'absolute', top: 20}}
-            source={require('../../assests/img/5a1d2fbc4ac6b00ff574e29a.png')}
-          />
-          <View>
-            <View style={styles.inputStyle}>
-              <TextInput
-                placeholderTextColor={'white'}
-                value={this.state.username}
-                onChangeText={username => this.setState({username})}
-                placeholder={'Username'}
-                style={styles.input}
-              />
-            </View>
-            <View style={styles.inputStyle}>
-              <TextInput
-                placeholderTextColor={'white'}
-                value={this.state.password}
-                onChangeText={password => this.setState({password})}
-                placeholder={'Password'}
-                secureTextEntry={true}
-                style={styles.input}
-              />
-            </View>
-            <TouchableHighlight onPress={this.onLogin.bind(this)}>
-              <View style={styles.loginButton} onMagicTap elevation={2}>
-                <Text style={styles.loginButtonText}>SIGN ON</Text>
-              </View>
-            </TouchableHighlight>
-          </View>
-          <View style={styles.section3}>
-            <View>
-              <Text style={{color: 'white'}}> Help </Text>
-            </View>
-            <View>
-              <Text style={{color: 'white'}}>Languages</Text>
-            </View>
-          </View>
-        </View>
+      <View style={this.state.loginLoader === true ? loaderStyle : {flex: 1}}>
+        {this.state.loginLoader === true ? loaderUI : webviewUI}
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    backgroundColor: '#fff',
-  },
-  input: {
-    width: 300,
-    height: 44,
-    color: 'white',
-  },
-  loginButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    display: 'flex',
-  },
-  loginButtonText: {
-    color: '#45A6D9',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  headerWrapper: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    // marginBottom: 30,
-  },
-  card: {
-    borderRadius: 2,
-    // display: 'inline-block',
-    backgroundColor: '#45A6D9',
-    height: 470,
-    width: 350,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    zIndex: 2,
-    padding: 50,
-    overflow: 'hidden',
-  },
-  inputStyle: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    // padding: 10,
-    marginBottom: 10,
-  },
-  inputButton: {
-    paddingTop: 20,
-    marginTop: 10,
-  },
-  section3: {
-    marginTop: 20,
-    // display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  topDecImage: {
-    bottom: 320,
-    height: 300,
-    width: 850,
-    backgroundColor: 'white',
-    borderBottomWidth: 3,
-    borderBottomColor: 'red',
-    position: 'absolute',
-    transform: [{rotate: '-17deg'}],
-  },
-});
+const styles = StyleSheet.create({});

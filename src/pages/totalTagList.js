@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import FixedHeader from '../components/fixedHeader.js';
 import Icon from 'react-native-vector-icons/Ionicons';
+let faker = require('faker');
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class TotalTagList extends React.Component {
   constructor(props) {
@@ -12,18 +14,18 @@ export default class TotalTagList extends React.Component {
       playPause: 'md-play',
       tagLists: [
         {
-          image: require('../../assests/img/greenTrimmer.jpg'),
+          image: this.getrandomImage(),
           name:
             'Philips QP2525/10 OneBlade Hybrid Trimmer and Shaver with 3 Trimming Combs (Lime Green)',
           quantity: '3',
         },
         {
-          image: require('../../assests/img/blueTrimmer.jpg'),
+          image: this.getrandomImage(),
           name: 'Philips BG1025/15 Showerproof Body Groomer for Men',
           quantity: '1',
         },
         {
-          image: require('../../assests/img/blackTrimmer.jpg'),
+          image: this.getrandomImage(),
           name: 'Mi Beard Trimmer (Black)',
           quantity: '1',
         },
@@ -39,20 +41,109 @@ export default class TotalTagList extends React.Component {
       headerLeft: null,
     };
   };
+  componentDidMount() {
+    this.getEpcToEanApi('30395DFA800A9740001E1EAE')
+      .then(resp => {
+        if (resp.status) {
+          console.log('Epc to Ean Converted', resp.eanCode);
+
+          this.getAccessToken('@access_token')
+            .then(accessTokenresp => {
+              console.log('accessTokenresp received');
+
+              this.getEanToItemCode([resp.eanCode, accessTokenresp])
+                .then(itemCoderesp => {
+                  console.log('itemCoderesp', itemCoderesp);
+                  this.getProductDetails(['8506080', accessTokenresp])
+                    .then(productDetailsResp => {
+                      console.log(productDetailsResp);
+                    })
+                    .catch(error => {
+                      console.log('getProductDetails error', error);
+                    });
+                })
+                .catch(error => {
+                  console.log('getEanToItemCode error', error);
+                });
+            })
+            .catch(error => {
+              console.log('getAccessToken error', error);
+            });
+        }
+      })
+      .catch(error => {
+        console.log('getEpcToEanApi error', error);
+      });
+  }
+
+  getProductDetails(data) {
+    const accessToken = data[1];
+    const itemCode = data[0];
+    console.log(accessToken);
+
+    return fetch(
+      `https://api-eu.preprod.decathlon.net/spid/v2/models?draft=false&state=CURRENT&modelCode=${itemCode}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Api-Key': '99d40149-6961-4a3c-89bd-cfff30ddfb81',
+        },
+      },
+    ).then(response => response.json());
+  }
+
+  getAccessToken = async key => {
+    let value = null;
+    try {
+      value = await AsyncStorage.getItem(key);
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line no-alert
+      alert('error in storing data');
+    }
+    return value;
+  };
+
+  getEanToItemCode(data) {
+    const accessToken = data[1];
+    const ean = data[0];
+    return fetch(
+      `https://api-eu.preprod.decathlon.net/masterdata/v2/arbo/items/search?ean=${ean}&item_type=ARTICLE`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Api-Key': 'f97b5f46-269e-4d76-91eb-5320cff067a7',
+        },
+      },
+    ).then(response => response.json());
+  }
+
+  getEpcToEanApi(epc) {
+    let url = `http://192.168.43.219:8080/epctoean/api/v1/epc/${epc}`;
+    console.log(url);
+    return fetch(url).then(response => response.json());
+  }
+
+  getrandomImage() {
+    return faker.image.image();
+  }
+
   getListOfTags() {
     let rows = [];
     console.log('Number of tags', this.state.tagLists.length);
 
     for (let i = 0; i < this.state.tagLists.length; i++) {
-      // note: we add a key prop here to allow react to uniquely identify each
-      // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
       rows.push(
         <View style={styles.c2Block} key={i}>
           <View style={styles.c2BLockImage}>
             <Image
               // eslint-disable-next-line react-native/no-inline-styles
               style={{width: 75, height: 75}}
-              source={this.state.tagLists[i].image}
+              source={{uri: this.state.tagLists[i].image}}
             />
           </View>
           <View style={styles.c2TagsDesc}>
