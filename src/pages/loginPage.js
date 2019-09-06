@@ -41,11 +41,11 @@ export default class Login extends React.Component {
       if (!this.state.urlReceived) {
         this.getAccessTokenApi(code)
           .then(resp => {
-            console.log('Authorization resp', resp);
+            console.log('Authorization resp', resp.access_token);
             this.storeData({key: '@access_token', value: resp.access_token});
             this.setState({urlReceived: false});
             this.props.navigation.navigate('WarehouseAndDevice');
-            this.getMyValue('@access_token');
+            // this.getMyValue('@access_token');
           })
           .catch(error => {
             console.error(error);
