@@ -15,6 +15,7 @@ export default class RfidOutput extends React.Component {
       excessQty: 0,
       shortQty: 0,
       withNoRfidExpectedQty: 0,
+      errorCode: [],
     };
   }
 
@@ -27,33 +28,56 @@ export default class RfidOutput extends React.Component {
     };
   };
 
-  startScan() {
-    console.log('startScan');
-    this.props.navigation.navigate('TotalTags');
+  submitError() {
+    console.log('submitError');
+    fetch('http://192.168.43.175/decathlon/public/api/v1/submit_error_code', {
+      method: 'POST',
+      body: {},
+    })
+      .then(response => response.json())
+      .then(() => {
+        alert('Submitted Sccessfully');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   componentDidMount() {
     console.log('componentDidMount');
-    let scope = this;
-    fetch('http://192.168.43.175/decathlon/public/admin/scan_save/DRHTFH3453')
-      .then(response => response.json())
-      .then(resp => {
-        console.log(resp);
-        console.log(resp.data);
-        scope.setState({
-          withRfidExpectedQty: resp.data[0].Result_total_expected_qtys,
-        });
-        scope.setState({
-          withRfidActualQty: resp.data[0].Result_total_actual_qtys,
-        });
-        scope.setState({excessQty: resp.data[0].Result_excess_qtys});
-        scope.setState({shortQty: resp.data[0].Result_short_qtys});
-        // scope.setState({withNoRfidExpectedQty: resp.data});
-      })
-      .catch(error => {
-        console.error(error);
-        alert('count not load warehouse api');
+
+    this.outputAndErrorApi().then(resp => {
+      this.setState({
+        withRfidExpectedQty: resp.data[0].result_total_expected_quantity,
       });
+
+      this.setState({
+        withRfidActualQty: resp.data[0].result_total_actual_quantity,
+      });
+
+      this.setState({excessQty: resp.data[0].total_excess_quantity});
+      this.setState({shortQty: resp.data[0].total_short_quantity});
+
+      this.setState({errorCode: resp.data[0].error_codes});
+    });
+  }
+
+  outputAndErrorApi() {
+    // this.getAccessToken('@warehouse').then(resp => {
+    //   console.log('warehouse id', resp);
+
+    //   let data = Object.assign({
+    //     hu_number: 'DRHTFH3453',
+    //     warehouse_id: resp,
+    //     item_details: this.state.productList,
+    //     // total_quantiy: this.getTotalquantity(),
+    //   });
+    //   console.log(data);
+    //   console.log(JSON.stringify(data));
+    // });
+    return fetch(
+      'http://192.168.43.175/decathlon/public/admin/scan_save/DRHTFH3453/IN01',
+    ).then(response => response.json());
   }
 
   render() {
@@ -222,7 +246,7 @@ export default class RfidOutput extends React.Component {
             flexDirection: 'row',
             // backgroundColor: 'red',
             justifyContent: 'center',
-            alignItems: 'flex-end',
+            alignItems: 'center',
           }}>
           <View style={styles.errorDropdown}>
             <Picker
@@ -234,22 +258,22 @@ export default class RfidOutput extends React.Component {
                 this.setState({isWarehouseSelected: true});
               }}>
               <Picker.Item label=" - Error List - " value="0" />
-              {/* {console.log('rendering pricker', this.state.warehouseList)}
-                    {this.state.warehouseList.map((value, index) => {
-                      console.log('value inside forloop', value);
-                      return (
-                        <Picker.Item
-                          key={index}
-                          label={value.WH_NAME}
-                          value={value.WH_NAME}
-                        />
-                      );
-                    })} */}
+              {/* {console.log('rendering pricker', this.state.warehouseList)} */}
+              {this.state.errorCode.map((value, index) => {
+                console.log('value inside forloop', value);
+                return (
+                  <Picker.Item
+                    key={index}
+                    label={value.error_code}
+                    value={value.error_code}
+                  />
+                );
+              })}
             </Picker>
           </View>
           <View>
             <TouchableHighlight
-              onPress={this.startScan.bind(this)}
+              onPress={this.submitError.bind(this)}
               elevation={2}>
               <View style={styles.c3SaveButton}>
                 <Text style={styles.c3SaveButtonText}>Submit</Text>

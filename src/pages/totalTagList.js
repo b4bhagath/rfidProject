@@ -18,7 +18,7 @@ export default class TotalTagList extends React.Component {
 
     this.state = {
       process: 'ecommerce',
-      playPause: 'md-play',
+      playPause: 'md-pause',
       productList: [],
     };
   }
@@ -92,6 +92,7 @@ export default class TotalTagList extends React.Component {
                                     this.populateProductDetails(
                                       productDetailsResp,
                                     );
+                                    this.outputAndErrorApi();
                                   }
                                 })
                                 .catch(error => {
@@ -138,25 +139,24 @@ export default class TotalTagList extends React.Component {
     ).then(response => response.json());
   }
 
+  getTotalquantity() {
+    let totalQuantity = 0;
+    this.state.newProductList.forEach(product => {
+      totalQuantity += product.quantity;
+    });
+    console.log(totalQuantity);
+    return totalQuantity;
+  }
+
   populateProductDetails(productInfo) {
     let imageId = productInfo.firstPackShotWeb.packshot.pixlId;
     let productList = this.state.productList;
     let newProductList = [];
     let isQuantiyUpdated = false;
-    // let product = {
-    //   itemCode: productInfo.code,
-    //   name: productInfo.modelInfoName,
-    //   image: `https://contents.mediadecathlon.com/p${imageId}/300x300`,
-    //   quantity: 1,
-    // };
+
     productList.forEach(product => {
       // console.log('for loop', product.itemCode, productInfo.code);
       if (product.itemCode === productInfo.code) {
-        // console.log(
-        //   'item code matched',
-        //   typeof product.itemCode,
-        //   typeof productInfo.code,
-        // );
         isQuantiyUpdated = true;
         newProductList.push({
           itemCode: product.itemCode,
@@ -179,7 +179,7 @@ export default class TotalTagList extends React.Component {
       });
     }
     // productList.push(product);
-    console.log(JSON.stringify(newProductList));
+    // console.log(JSON.stringify(newProductList));
     this.setState({productList: newProductList});
   }
 
@@ -267,12 +267,16 @@ export default class TotalTagList extends React.Component {
   }
 
   startOrStop() {
-    console.log('Changeing icon');
-    if (this.state.playPause === 'md-play') {
-      this.setState({playPause: 'md-pause'});
-    } else {
-      this.setState({playPause: 'md-play'});
-    }
+    // this.outputAndErrorApi().then(resp => {
+    //   console.log(resp);
+    // });
+    this.props.navigation.navigate('RfidOutput');
+    // console.log('Changeing icon');
+    // if (this.state.playPause === 'md-play') {
+    //   this.setState({playPause: 'md-pause'});
+    // } else {
+    //   this.setState({playPause: 'md-play'});
+    // }
   }
 
   confirmTotalTags() {

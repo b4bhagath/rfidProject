@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import FixedHeader from '../components/fixedHeader.js';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Warehouse extends React.Component {
   constructor(props) {
@@ -38,9 +39,19 @@ export default class Warehouse extends React.Component {
     console.log(this.state.isWarehouseSelected, this.state.deviceSelected);
     if (this.state.isWarehouseSelected && this.state.deviceSelected) {
       console.log('Next page plz');
+      this.storeData({key: '@warehouse', value: this.state.warehouse});
       this.props.navigation.navigate('HuSelectionScreen');
     }
   }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem(data.key, data.value);
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  };
   scanForDevice() {
     console.log('Scan for device');
     this.props.navigation.navigate('BluetoothDevice');
