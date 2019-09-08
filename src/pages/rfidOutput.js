@@ -46,20 +46,20 @@ export default class RfidOutput extends React.Component {
   componentDidMount() {
     console.log('componentDidMount');
 
-    this.outputAndErrorApi().then(resp => {
-      this.setState({
-        withRfidExpectedQty: resp.data[0].result_total_expected_quantity,
-      });
+    // this.outputAndErrorApi().then(resp => {
+    //   this.setState({
+    //     withRfidExpectedQty: resp.data[0].result_total_expected_quantity,
+    //   });
 
-      this.setState({
-        withRfidActualQty: resp.data[0].result_total_actual_quantity,
-      });
+    //   this.setState({
+    //     withRfidActualQty: resp.data[0].result_total_actual_quantity,
+    //   });
 
-      this.setState({excessQty: resp.data[0].total_excess_quantity});
-      this.setState({shortQty: resp.data[0].total_short_quantity});
+    //   this.setState({excessQty: resp.data[0].total_excess_quantity});
+    //   this.setState({shortQty: resp.data[0].total_short_quantity});
 
-      this.setState({errorCode: resp.data[0].error_codes});
-    });
+    //   this.setState({errorCode: resp.data[0].error_codes});
+    // });
   }
 
   outputAndErrorApi() {

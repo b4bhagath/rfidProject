@@ -20,6 +20,7 @@ export default class TotalTagList extends React.Component {
       process: 'ecommerce',
       playPause: 'md-pause',
       productList: [],
+      yourlocalIp: 'http://192.168.43.219:8080',
     };
   }
 
@@ -47,78 +48,82 @@ export default class TotalTagList extends React.Component {
     ];
 
     listOfEpc.forEach(epc => {
-      this.getEpcToEanApi(epc)
-        .then(resp => {
-          if (!resp.status && !resp) {
-            throw new Error('No resp');
-          } else {
-            console.log('Epc to Ean Converted', resp.eanCode);
-
-            this.getAccessToken('@access_token')
-              .then(accessTokenresp => {
-                if (!accessTokenresp) {
-                  throw new Error('No access token');
-                } else {
-                  console.log('accessTokenresp received');
-
-                  this.getEanToItemCode([resp.eanCode, accessTokenresp])
-                    .then(itemCoderesp => {
-                      if (!itemCoderesp) {
-                        throw new Error('No item code');
-                      } else {
-                        console.log('item code received');
-                        console.log(itemCoderesp.supplier_code);
-
-                        this.getItemToModelCode([
-                          itemCoderesp.supplier_code,
-                          accessTokenresp,
-                        ])
-                          .then(modelCodeResp => {
-                            if (modelCodeResp.length === 0) {
-                              throw new Error('No model code');
-                            } else {
-                              console.log('model code received');
-                              console.log(!modelCodeResp);
-                              this.getProductDetails([
-                                modelCodeResp[0].model_id,
-                                accessTokenresp,
-                              ])
-                                .then(productDetailsResp => {
-                                  if (!productDetailsResp) {
-                                    throw new Error('No product details');
-                                  } else {
-                                    console.log('product details received');
-                                    console.log(productDetailsResp);
-                                    this.populateProductDetails(
-                                      productDetailsResp,
-                                    );
-                                    this.outputAndErrorApi();
-                                  }
-                                })
-                                .catch(error => {
-                                  console.log('getProductDetails error', error);
-                                });
-                            }
-                          })
-                          .catch(error => {
-                            console.log('getItemToModelCode error', error);
-                          });
-                      }
-                    })
-                    .catch(error => {
-                      console.log('getEanToItemCode error', error);
-                    });
-                }
-              })
-              .catch(error => {
-                console.log('getAccessToken error', error);
-              });
-          }
-        })
-        .catch(error => {
-          console.log('getEpcToEanApi error', error);
-        });
+      this.epcToItemCodeConverstion(epc);
     });
+  }
+
+  epcToItemCodeConverstion(epc) {
+    this.getEpcToEanApi(epc)
+      .then(resp => {
+        if (!resp.status && !resp) {
+          throw new Error('No resp');
+        } else {
+          console.log('Epc to Ean Converted', resp.eanCode);
+
+          this.getAccessToken('@access_token')
+            .then(accessTokenresp => {
+              if (!accessTokenresp) {
+                throw new Error('No access token');
+              } else {
+                console.log('accessTokenresp received');
+
+                this.getEanToItemCode([resp.eanCode, accessTokenresp])
+                  .then(itemCoderesp => {
+                    if (!itemCoderesp) {
+                      throw new Error('No item code');
+                    } else {
+                      console.log('item code received');
+                      console.log(itemCoderesp.supplier_code);
+
+                      this.getItemToModelCode([
+                        itemCoderesp.supplier_code,
+                        accessTokenresp,
+                      ])
+                        .then(modelCodeResp => {
+                          if (modelCodeResp.length === 0) {
+                            throw new Error('No model code');
+                          } else {
+                            console.log('model code received');
+                            console.log(!modelCodeResp);
+                            this.getProductDetails([
+                              modelCodeResp[0].model_id,
+                              accessTokenresp,
+                            ])
+                              .then(productDetailsResp => {
+                                if (!productDetailsResp) {
+                                  throw new Error('No product details');
+                                } else {
+                                  console.log('product details received');
+                                  console.log(productDetailsResp);
+                                  this.populateProductDetails(
+                                    productDetailsResp,
+                                  );
+                                  this.outputAndErrorApi();
+                                }
+                              })
+                              .catch(error => {
+                                console.log('getProductDetails error', error);
+                              });
+                          }
+                        })
+                        .catch(error => {
+                          console.log('getItemToModelCode error', error);
+                        });
+                    }
+                  })
+                  .catch(error => {
+                    console.log('getEanToItemCode error', error);
+                  });
+              }
+            })
+            .catch(error => {
+              console.log('getAccessToken error', error);
+            });
+        }
+      })
+      .catch(error => {
+        console.log('getEpcToEanApi error', error);
+      });
   }
 
   getItemToModelCode(data) {
@@ -229,7 +234,7 @@ export default class TotalTagList extends React.Component {
   }
 
   getEpcToEanApi(epc) {
-    let url = `http://192.168.43.219:8080/epctoean/api/v1/epc/${epc}`;
+    let url = `${this.state.yourlocalIp}/epctoean/api/v1/epc/${epc}`;
     console.log(url);
     return fetch(url).then(response => response.json());
   }

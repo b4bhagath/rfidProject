@@ -20,7 +20,7 @@ export default class Warehouse extends React.Component {
     this.state = {
       warehouse: '0',
       warehouseList: [],
-      isWarehouseSelected: false,
+      isWarehouseSelected: true,
       deviceSelected: true,
       isDeviceSelected: false,
     };
@@ -62,15 +62,15 @@ export default class Warehouse extends React.Component {
     // let warehouse = [];
     // eslint-disable-next-line consistent-this
     let scope = this;
-    fetch('http://192.168.43.175/decathlon/public/admin/warehouse_list/qw24ad')
-      .then(response => response.json())
-      .then(responseJson => {
-        scope.setState({warehouseList: responseJson.data});
-      })
-      .catch(error => {
-        console.error(error);
-        alert('count not load warehouse api');
-      });
+    // fetch('http://192.168.43.175/decathlon/public/admin/warehouse_list/qw24ad')
+    //   .then(response => response.json())
+    //   .then(responseJson => {
+    //     scope.setState({warehouseList: responseJson.data});
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //     alert('count not load warehouse api');
+    //   });
   }
   render() {
     const verifiedLogo = (
