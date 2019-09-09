@@ -19,6 +19,7 @@ export default class RfidOutput extends React.Component {
       errorCode: [],
       shortItemCode: [],
       excessItemCode: [],
+      selectedErrorCode: [],
     };
   }
 
@@ -32,14 +33,27 @@ export default class RfidOutput extends React.Component {
   };
 
   submitError() {
-    console.log('submitError');
+    console.log('submitError function');
+    let data = {
+      error_code: this.state.selectedErrorCode,
+      warehouse_id: 'IN02',
+      hu_number: 'DRHTFH3453',
+    };
+    console.log(JSON.stringify(data));
     fetch('http://192.168.43.175/decathlon/public/api/v1/submit_error_code', {
       method: 'POST',
-      body: {},
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     })
       .then(response => response.json())
-      .then(() => {
-        alert('Submitted Sccessfully');
+      .then(resp => {
+        console.log(resp);
+        if (resp.status === 200) {
+          alert(resp.data);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -202,7 +216,7 @@ export default class RfidOutput extends React.Component {
                     justifyContent: 'center',
                   }}>
                   <Picker
-                    selectedValue={this.state.warehouse}
+                    // selectedValue={this.state.warehouse}
                     style={styles.picker}
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
@@ -239,7 +253,7 @@ export default class RfidOutput extends React.Component {
                     justifyContent: 'center',
                   }}>
                   <Picker
-                    selectedValue={this.state.warehouse}
+                    // selectedValue={this.state.warehouse}
                     style={styles.picker}
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
@@ -297,11 +311,11 @@ export default class RfidOutput extends React.Component {
           }}>
           <View style={styles.errorDropdown}>
             <Picker
-              selectedValue={this.state.warehouse}
+              selectedValue={this.state.selectedErrorCode}
               style={styles.picker}
               mode={'dropdown'}
               onValueChange={(itemValue, itemIndex) => {
-                // this.setState({warehouse: itemValue});
+                this.setState({selectedErrorCode: itemValue});
                 // this.setState({isWarehouseSelected: true});
               }}>
               <Picker.Item label=" - Error List - " value="0" />
