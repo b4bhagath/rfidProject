@@ -2,6 +2,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Picker, TouchableHighlight} from 'react-native';
 import FixedHeader from '../components/fixedHeader.js';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class RfidOutput extends React.Component {
   constructor(props) {
@@ -16,6 +17,8 @@ export default class RfidOutput extends React.Component {
       shortQty: 0,
       withNoRfidExpectedQty: 0,
       errorCode: [],
+      shortItemCode: [],
+      excessItemCode: [],
     };
   }
 
@@ -45,40 +48,89 @@ export default class RfidOutput extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount');
-
     this.outputAndErrorApi().then(resp => {
-      this.setState({
-        withRfidExpectedQty: resp.data[0].result_total_expected_quantity,
-      });
-
-      this.setState({
-        withRfidActualQty: resp.data[0].result_total_actual_quantity,
-      });
-
-      this.setState({excessQty: resp.data[0].total_excess_quantity});
-      this.setState({shortQty: resp.data[0].total_short_quantity});
-
-      this.setState({errorCode: resp.data[0].error_codes});
+      console.log(resp);
     });
   }
 
   outputAndErrorApi() {
-    // this.getAccessToken('@warehouse').then(resp => {
-    //   console.log('warehouse id', resp);
+    return this.getAccessToken('@warehouse').then(resp => {
+      console.log('warehouse id', resp);
 
-    //   let data = Object.assign({
-    //     hu_number: 'DRHTFH3453',
-    //     warehouse_id: resp,
-    //     item_details: this.state.productList,
-    //     // total_quantiy: this.getTotalquantity(),
-    //   });
-    //   console.log(data);
-    //   console.log(JSON.stringify(data));
-    // });
-    return fetch(
-      'http://192.168.43.175/decathlon/public/admin/scan_save/DRHTFH3453/IN01',
-    ).then(response => response.json());
+      let data = Object.assign({
+        hu_number: 'DRHTFH3453',
+        warehouse_id: 'IN02',
+        total_quantity: 5,
+        item_details: [
+          {
+            itemCode: '8528146',
+            quantity: 1,
+          },
+          {
+            itemCode: '8506492',
+            quantity: 1,
+          },
+          {
+            itemCode: '2394943',
+            quantity: 1,
+          },
+          {
+            itemCode: '8528198',
+            quantity: 2,
+          },
+        ],
+      });
+
+      console.log(JSON.stringify(data));
+      return fetch('http://192.168.43.175/decathlon/public/api/v1/scan_save', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => response.json())
+        .then(scanSaveResp => {
+          console.log(scanSaveResp);
+          this.setState({
+            withRfidExpectedQty:
+              scanSaveResp.data.result_total_expected_quantity,
+          });
+
+          this.setState({
+            withRfidActualQty: scanSaveResp.data.result_total_actual_quantity,
+          });
+
+          this.setState({
+            excessQty: scanSaveResp.data.total_excess_quantity,
+          });
+          this.setState({shortQty: scanSaveResp.data.total_short_quantity});
+
+          this.setState({errorCode: scanSaveResp.data.error_codes});
+          this.setState({shortItemCode: scanSaveResp.data.short_item_code});
+          this.setState({excessItemCode: scanSaveResp.data.excess_item_code});
+          this.setState({
+            withNoRfidExpectedQty: scanSaveResp.data.total_no_rfid_qty,
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      //   console.log(JSON.stringify(data));
+    });
   }
+  getAccessToken = async key => {
+    let value = null;
+    try {
+      value = await AsyncStorage.getItem(key);
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line no-alert
+      alert('error in storing data');
+    }
+    return value;
+  };
 
   render() {
     return (
@@ -154,21 +206,20 @@ export default class RfidOutput extends React.Component {
                     style={styles.picker}
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
-                      this.setState({warehouse: itemValue});
-                      this.setState({isWarehouseSelected: true});
+                      // this.setState({warehouse: itemValue});
+                      // this.setState({isWarehouseSelected: true});
                     }}>
-                    <Picker.Item label=" - Select - " value="0" />
-                    {/* {console.log('rendering pricker', this.state.warehouseList)}
-                    {this.state.warehouseList.map((value, index) => {
-                      console.log('value inside forloop', value);
+                    {/* <Picker.Item label=" - Select - " value="0" /> */}
+                    {/* {console.log(
+                      'rendering pricker',
+                      this.state.excessItemCode,
+                    )} */}
+                    {this.state.excessItemCode.map((value, index) => {
+                      // console.log('value inside forloop', value);
                       return (
-                        <Picker.Item
-                          key={index}
-                          label={value.WH_NAME}
-                          value={value.WH_NAME}
-                        />
+                        <Picker.Item key={index} label={value} value={value} />
                       );
-                    })} */}
+                    })}
                   </Picker>
                 </View>
               </View>
@@ -192,21 +243,17 @@ export default class RfidOutput extends React.Component {
                     style={styles.picker}
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
-                      this.setState({warehouse: itemValue});
-                      this.setState({isWarehouseSelected: true});
+                      // this.setState({warehouse: itemValue});
+                      // this.setState({isWarehouseSelected: true});
                     }}>
-                    <Picker.Item label=" - Select - " value="0" />
-                    {/* {console.log('rendering pricker', this.state.warehouseList)}
-                    {this.state.warehouseList.map((value, index) => {
-                      console.log('value inside forloop', value);
+                    {/* <Picker.Item label=" - Select - " value="0" /> */}
+                    {/* {console.log('rendering pricker', this.state.shortItemCode)} */}
+                    {this.state.shortItemCode.map((value, index) => {
+                      // console.log('value inside forloop', value);
                       return (
-                        <Picker.Item
-                          key={index}
-                          label={value.WH_NAME}
-                          value={value.WH_NAME}
-                        />
+                        <Picker.Item key={index} label={value} value={value} />
                       );
-                    })} */}
+                    })}
                   </Picker>
                 </View>
               </View>
@@ -254,13 +301,13 @@ export default class RfidOutput extends React.Component {
               style={styles.picker}
               mode={'dropdown'}
               onValueChange={(itemValue, itemIndex) => {
-                this.setState({warehouse: itemValue});
-                this.setState({isWarehouseSelected: true});
+                // this.setState({warehouse: itemValue});
+                // this.setState({isWarehouseSelected: true});
               }}>
               <Picker.Item label=" - Error List - " value="0" />
               {/* {console.log('rendering pricker', this.state.warehouseList)} */}
               {this.state.errorCode.map((value, index) => {
-                console.log('value inside forloop', value);
+                // console.log('value inside forloop', value);
                 return (
                   <Picker.Item
                     key={index}
