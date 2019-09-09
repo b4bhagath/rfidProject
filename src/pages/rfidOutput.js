@@ -62,18 +62,21 @@ export default class RfidOutput extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount');
-    this.outputAndErrorApi().then(resp => {
-      console.log(resp);
-    });
+    this.outputAndErrorApi();
+    // .then(resp => {
+    //   console.log(resp);
+    // });
   }
 
   outputAndErrorApi() {
-    return this.getAccessToken('@warehouse').then(resp => {
-      console.log('warehouse id', resp);
+    this.getDataFromStorage(['@warehouse', '@hunumber']).then(resp => {
+      let warehouse = resp[0][1];
+      let hunumber = resp[1][1];
+      console.log(warehouse, hunumber, resp);
 
       let data = Object.assign({
-        hu_number: 'DRHTFH3453',
-        warehouse_id: 'IN02',
+        hu_number: hunumber,
+        warehouse_id: warehouse,
         total_quantity: 5,
         item_details: [
           {
@@ -131,13 +134,12 @@ export default class RfidOutput extends React.Component {
         .catch(error => {
           console.log(error);
         });
-      //   console.log(JSON.stringify(data));
     });
   }
-  getAccessToken = async key => {
+  getDataFromStorage = async key => {
     let value = null;
     try {
-      value = await AsyncStorage.getItem(key);
+      value = await AsyncStorage.multiGet(key);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line no-alert
@@ -303,7 +305,7 @@ export default class RfidOutput extends React.Component {
         </View>
         <View
           style={{
-            flex: 2,
+            flex: 1,
             flexDirection: 'row',
             // backgroundColor: 'red',
             justifyContent: 'center',
@@ -342,6 +344,25 @@ export default class RfidOutput extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            // backgroundColor: 'red',
+            // justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}>
+          <View>
+            <TouchableHighlight
+              // onPress={this.submitError.bind(this)}
+              elevation={2}>
+              <View style={styles.c3SaveButton}>
+                <Text style={styles.c3SaveButtonText}>Check Again</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+        </View>
       </View>
     );
   }
@@ -367,7 +388,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   errorDropdown: {
-    marginBottom: 20,
+    // marginBottom: 20,
     width: '70%',
     // backgroundColor: 'green',
   },

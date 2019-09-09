@@ -65,6 +65,7 @@ export default class Warehouse extends React.Component {
     fetch('http://192.168.43.175/decathlon/public/admin/warehouse_list/qw24ad')
       .then(response => response.json())
       .then(responseJson => {
+        console.log(responseJson);
         scope.setState({warehouseList: responseJson.data});
       })
       .catch(error => {
@@ -104,7 +105,7 @@ export default class Warehouse extends React.Component {
                       <Picker.Item
                         key={index}
                         label={value.WH_NAME}
-                        value={value.WH_NAME}
+                        value={value.WH_id}
                       />
                     );
                   })}

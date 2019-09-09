@@ -18,7 +18,7 @@ export default class TotalTagList extends React.Component {
 
     this.state = {
       process: 'ecommerce',
-      playPause: 'md-pause',
+      playPause: 'md-fastforward',
       productList: [],
       yourlocalIp: 'http://192.168.43.219:8080',
     };
@@ -294,20 +294,9 @@ export default class TotalTagList extends React.Component {
         <View style={styles.section1}>
           <View style={styles.c1}>
             <View style={styles.c1Block}>
-              <View>
-                <Text style={styles.c1TextBox}>
-                  Total Tags Read: {this.state.productList.length}
-                </Text>
-              </View>
-              <View>
-                <TouchableOpacity
-                  onPress={this.confirmTotalTags.bind(this)}
-                  elevation={2}>
-                  <View style={styles.c1ConfirmButton}>
-                    <Icon name="md-checkmark" color="#45A6D9" size={25} />
-                  </View>
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.c1TextBox}>
+                Total Tags Read: {this.state.productList.length}
+              </Text>
             </View>
           </View>
           <ScrollView>
@@ -352,7 +341,7 @@ const styles = StyleSheet.create({
   c1Block: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   c1ConfirmButton: {
     paddingHorizontal: 20,

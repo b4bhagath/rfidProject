@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import FixedHeader from '../components/fixedHeader.js';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class HuSelectionScreen extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export default class HuSelectionScreen extends React.Component {
 
     this.state = {
       process: 'warehouse',
-      huText: '',
+      huText: 'DRHTFH3453',
     };
   }
 
@@ -28,7 +29,9 @@ export default class HuSelectionScreen extends React.Component {
   };
 
   startScan() {
-    console.log('startScan');
+    console.log('startScan', this.state.huText);
+
+    this.storeData({key: '@hunumber', value: this.state.huText});
     this.props.navigation.navigate('TotalTags');
     // fetch('http://192.168.43.175/decathlon/public/admin/warehouse_list/qw24ad')
     //   .then(response => response.json())
@@ -41,6 +44,15 @@ export default class HuSelectionScreen extends React.Component {
     //     alert('count not load warehouse api');
     //   });
   }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem(data.key, data.value);
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  };
 
   render() {
     return (
