@@ -20,7 +20,7 @@ export default class Warehouse extends React.Component {
     this.state = {
       warehouse: '0',
       warehouseList: [],
-      isWarehouseSelected: false,
+      isWarehouseSelected: true,
       deviceSelected: true,
       isDeviceSelected: false,
     };
